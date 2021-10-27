@@ -1,5 +1,6 @@
 package by.tms.web.servlet;
 
+import by.tms.entity.User;
 import by.tms.storage.InMemoryUserStorage;
 
 import javax.servlet.ServletException;
@@ -16,7 +17,8 @@ public class RenameUserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String newLogin = req.getParameter("login");
         String newPassword = req.getParameter("password");
-        if(inMemoryUserStorage.renameUser(newLogin, newPassword)) {
+        User user = (User) req.getSession().getAttribute("user");
+        if(inMemoryUserStorage.renameUser(newLogin, newPassword, user)) {
             resp.getWriter().println("rename successful");
         } else {
             resp.getWriter().println("error");

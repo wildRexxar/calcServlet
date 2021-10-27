@@ -1,6 +1,8 @@
 package by.tms.storage;
 
 import by.tms.entity.Result;
+import by.tms.entity.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,21 +11,15 @@ public class InMemoryResultStorage {
     private final static List<Result> resultList = new ArrayList<>();
     private final InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
 
-    public int addResult(String example, String result){
-        int index = inMemoryUserStorage.getUserIndex();
-        if(index > -1) {
-            resultList.add(new Result(index, example, result));
-            return index;
-        } else {
-            return -1;
-        }
+    public void addResult(String example, String result, User user){
+            resultList.add(new Result(user, example, result));
+
     }
 
-    public List<Result> showResults () {
-        int index = inMemoryUserStorage.getUserIndex();
+    public List<Result> showResults (User user) {
         List<Result> userResult = new ArrayList<>();
         for(Result result :resultList){
-            if(result.getIndex() == index) {
+            if(result.getUser().equals(user)) {
                 userResult.add(result);
             }
         }

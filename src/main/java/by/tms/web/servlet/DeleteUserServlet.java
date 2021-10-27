@@ -15,13 +15,7 @@ public class DeleteUserServlet extends HttpServlet {
     private final InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String login = req.getParameter("login");
-        String password = req.getParameter("password");
-        if(inMemoryUserStorage.deleteUser()){
-            resp.getWriter().println("user deleted successfully");
-        } else {
-            resp.getWriter().println("user deletion failed");
-        }
-
+        int userIndex = (Integer) req.getSession().getAttribute("userIndex");
+        inMemoryUserStorage.deleteUser(userIndex);
     }
 }

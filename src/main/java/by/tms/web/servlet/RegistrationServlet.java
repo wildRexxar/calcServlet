@@ -19,11 +19,8 @@ public class RegistrationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
-        if(inMemoryUserStorage.registration(new User(login, password))) {
-            resp.getWriter().println("registration completed successfully");
-        }
-        else {
-            resp.getWriter().println("registration failed");
-        }
+        if(inMemoryUserStorage.addUser(new User(login, password))){
+        resp.getWriter().println("true");}
+        else {resp.getWriter().println("false");}
     }
 }

@@ -11,14 +11,9 @@ import java.io.IOException;
 @WebFilter(urlPatterns = {"/registration", "/authorization","/rename", "/calc", "/history", "/delete", "/logout"})
 public class EncodingFilter extends HttpFilter {
 
-    @Override
-    public void init() throws ServletException {
-        System.out.println("FILTER IS INIT");
-    }
 
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
-        System.out.println("FILTER IS WORKING");
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
         chain.doFilter(req, res);

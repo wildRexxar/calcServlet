@@ -1,9 +1,8 @@
 package by.tms.web.servlet;
 
+import by.tms.entity.User;
 import by.tms.service.Calc;
 import by.tms.storage.InMemoryResultStorage;
-import by.tms.storage.InMemoryUserStorage;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,11 +14,11 @@ import java.util.List;
 @WebServlet("/calc")
 public class CalcServlet extends HttpServlet {
     private final InMemoryResultStorage inMemoryResultStorage = new InMemoryResultStorage();
-    private final InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (inMemoryUserStorage.getUserIndex() > -1) {
+        User user  = (User) req.getSession().getAttribute("user");
+        if (user != null) {
             List<Double> nums = (List<Double>) req.getSession().getAttribute("listOfNumbers");
             String operation = (String) req.getSession().getAttribute("operation");
             if(nums == null) {
@@ -31,7 +30,7 @@ public class CalcServlet extends HttpServlet {
                 double result = Calc.valueOf(operation).compute(nums.get(0), nums.get(1));
                 System.out.println(result);
                 resp.getWriter().println("RESULT = " + result);
-                inMemoryResultStorage.addResult(nums.get(0) + " " + operation + " " + nums.get(1), Double.toString(result));
+                inMemoryResultStorage.addResult(nums.get(0) + " " + operation + " " + nums.get(1), Double.toString(result), user);
             }
         } else {
             resp.getWriter().println("unknown user");

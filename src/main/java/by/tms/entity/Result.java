@@ -1,22 +1,22 @@
 package by.tms.entity;
 
 public class Result {
-    private int index;
+    private User user;
     private String example;
     private String result;
 
-    public Result(int index, String example, String result) {
-        this.index = index;
+    public Result(User user, String example, String result) {
+        this.user = user;
         this.example = example;
         this.result = result;
     }
 
-    public int getIndex() {
-        return index;
+    public User getUser() {
+        return user;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getExample() {
