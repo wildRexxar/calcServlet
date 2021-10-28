@@ -1,28 +1,39 @@
 package by.tms.storage;
-
-import by.tms.entity.Result;
-import by.tms.entity.User;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryResultStorage {
 
-    private final static List<Result> resultList = new ArrayList<>();
-    private final InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
-
-    public void addResult(String example, String result, User user){
-            resultList.add(new Result(user, example, result));
-
+    public void writeResultToDB(String num1, String operation, String num2, String result, int userID){
+        String insertResult = "INSERT INTO result_history (id, expression, result) VALUE (?, ?, ?) ";
+        try(Connection connect = ConnectToBase.connect();
+            PreparedStatement preparedStatement = connect.prepareStatement(insertResult)) {
+            preparedStatement.setInt(1, userID);
+            preparedStatement.setString(2, num1 + " " + operation + " " + num2);
+            preparedStatement.setString(3, result);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public List<Result> showResults (User user) {
-        List<Result> userResult = new ArrayList<>();
-        for(Result result :resultList){
-            if(result.getUser().equals(user)) {
-                userResult.add(result);
+    public  List getResult(int userId) {
+        String getHistoryById = "SELECT * FROM result_history WHERE id LIKE ? ";
+        List<String> listOfResult = new ArrayList<>();
+        try (Connection connection = ConnectToBase.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(getHistoryById)) {
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                listOfResult.add(resultSet.getString("expression") + " = " + resultSet.getString("result"));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return userResult;
+        return listOfResult;
     }
 }

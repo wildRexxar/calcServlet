@@ -1,7 +1,5 @@
 package by.tms.web.servlet;
 
-import by.tms.entity.Result;
-import by.tms.entity.User;
 import by.tms.storage.InMemoryResultStorage;
 
 import javax.servlet.ServletException;
@@ -17,9 +15,15 @@ public class GetResultServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = (User) req.getSession().getAttribute("user");
-        for (Result result : inMemoryResultStorage.showResults(user)) {
-            resp.getWriter().println(result);
+        getServletContext().getRequestDispatcher("/pages/history.jsp").forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int userId = (Integer) req.getSession().getAttribute("userId");
+        for (Object result : inMemoryResultStorage.getResult(userId)) {
+            req.getSession().setAttribute("message", result);
+//            resp.getWriter().println((String) result);
         }
     }
 }

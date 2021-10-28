@@ -2,7 +2,6 @@ package by.tms.web.servlet;
 
 import by.tms.entity.User;
 import by.tms.storage.InMemoryUserStorage;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,14 +15,18 @@ public class AuthorizationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        getServletContext().getRequestDispatcher("/pages/authorization.jsp").forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
-        User user = new User (login, password);
-        if (inMemoryUserStorage.checkUser(user) != null) {
-            req.getSession().setAttribute("user", user);
-            resp.getWriter().println("authorization was successful");
+        if (inMemoryUserStorage.getUserFromDB(new User(login, password))) {
+            req.getSession().setAttribute("userId", inMemoryUserStorage.getUserId());
+            resp.sendRedirect("/userPage");
         } else {
-            resp.getWriter().println("wrong login or password");
+            resp.sendRedirect("/home");
         }
     }
 }

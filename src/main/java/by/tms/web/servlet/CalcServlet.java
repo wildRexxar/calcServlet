@@ -1,8 +1,8 @@
 package by.tms.web.servlet;
 
-import by.tms.entity.User;
 import by.tms.service.Calc;
 import by.tms.storage.InMemoryResultStorage;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,23 +17,17 @@ public class CalcServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user  = (User) req.getSession().getAttribute("user");
-        if (user != null) {
-            List<Double> nums = (List<Double>) req.getSession().getAttribute("listOfNumbers");
-            String operation = (String) req.getSession().getAttribute("operation");
-            if(nums == null) {
-                resp.getWriter().println("invalid number format");
-            }
-            if (operation == null) {
-                resp.getWriter().println("invalid operator");
-            } else {
-                double result = Calc.valueOf(operation).compute(nums.get(0), nums.get(1));
-                System.out.println(result);
-                resp.getWriter().println("RESULT = " + result);
-                inMemoryResultStorage.addResult(nums.get(0) + " " + operation + " " + nums.get(1), Double.toString(result), user);
-            }
-        } else {
-            resp.getWriter().println("unknown user");
-        }
+        getServletContext().getRequestDispatcher("/pages/calculator.jsp").forward(req, resp);
+        int userIndex = (Integer) req.getSession().getAttribute("userId");
+        List<Double> nums = (List<Double>) req.getSession().getAttribute("listOfNumbers");
+        String operation = req.getParameter("operation");
+        double result = Calc.valueOf(operation).compute(nums.get(0), nums.get(1));
+        inMemoryResultStorage.writeResultToDB(nums.get(0).toString(), operation, nums.get(1).toString(), Double.toString(result), userIndex);
+        req.getSession().setAttribute("result", result);
+        getServletContext().getRequestDispatcher("pages/calculator.jsp").forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     }
 }

@@ -2,7 +2,6 @@ package by.tms.web.servlet;
 
 import by.tms.entity.User;
 import by.tms.storage.InMemoryUserStorage;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,10 +16,21 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        getServletContext().getRequestDispatcher("/pages/registration.jsp").forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
-        if(inMemoryUserStorage.addUser(new User(login, password))){
-        resp.getWriter().println("true");}
-        else {resp.getWriter().println("false");}
+        User user = new User (login, password);
+        if(inMemoryUserStorage.checkLogin(user)){
+            inMemoryUserStorage.addToDB(user);
+            getServletContext().getRequestDispatcher("pages/authorization.jsp").forward(req, resp);
+        }
+        else {
+            getServletContext().getRequestDispatcher("pages/registration.jsp").forward(req, resp);
+        }
+
     }
 }
