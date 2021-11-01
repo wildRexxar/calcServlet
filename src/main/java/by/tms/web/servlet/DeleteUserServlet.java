@@ -1,7 +1,7 @@
 package by.tms.web.servlet;
 
+import by.tms.storage.InMemoryResultStorage;
 import by.tms.storage.InMemoryUserStorage;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,13 +12,14 @@ import java.io.IOException;
 @WebServlet("/delete")
 public class DeleteUserServlet extends HttpServlet {
     private final InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
+    private final InMemoryResultStorage inMemoryResultStorage = new InMemoryResultStorage();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int userId = (Integer) req.getSession().getAttribute("userId");
-        if (inMemoryUserStorage.deleteUserFromDB(userId)){
-            resp.getWriter().println("yes");
-        } else {
-            resp.getWriter().println("no");
+        if(req.getSession().getAttribute("userId") != null) {
+            int id = (Integer) req.getSession().getAttribute("userId");
+            inMemoryUserStorage.delete(id);
+            inMemoryUserStorage.delete(id);
+            resp.sendRedirect("/");
         }
     }
 }

@@ -25,12 +25,11 @@ public class RegistrationServlet extends HttpServlet {
         String password = req.getParameter("password");
         User user = new User (login, password);
         if(inMemoryUserStorage.checkLogin(user)){
-            inMemoryUserStorage.addToDB(user);
-            getServletContext().getRequestDispatcher("pages/authorization.jsp").forward(req, resp);
+            inMemoryUserStorage.save(user);
+            resp.sendRedirect("/home");;
         }
         else {
-            getServletContext().getRequestDispatcher("pages/registration.jsp").forward(req, resp);
+            resp.sendRedirect("/registration");
         }
-
     }
 }

@@ -22,11 +22,12 @@ public class AuthorizationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
-        if (inMemoryUserStorage.getUserFromDB(new User(login, password))) {
-            req.getSession().setAttribute("userId", inMemoryUserStorage.getUserId());
+        int id = inMemoryUserStorage.idOutput(new User(login, password));
+        if (id > 0) {
+            req.getSession().setAttribute("userId", id);
             resp.sendRedirect("/userPage");
         } else {
-            resp.sendRedirect("/home");
+            resp.sendRedirect("/registration");
         }
     }
 }

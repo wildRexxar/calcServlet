@@ -1,27 +1,20 @@
 <%--
   Created by IntelliJ IDEA.
   User: Илья
-  Date: 28.10.2021
-  Time: 10:03
+  Date: 29.10.2021
+  Time: 4:05
   To change this template use File | Settings | File Templates.
 --%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <html>
 <head>
-    <title>History</title>
+    <title>Result</title>
 </head>
 <body>
-<p>Result History</p>
-
-<ul>
-    <c:forEach items="${requestScope.results}" var="result">
-        <li>${result}</li>
-    </c:forEach>
-</ul>
-
+<form action="/res" method="post">
+    <p>${requestScope.result}</p>
+</form>
+<p><a href="/calc"><button>Calculator</button></a></p>
 <p><a href="/userPage"><button>Back</button></a></p>
-
 </body>
 </html>

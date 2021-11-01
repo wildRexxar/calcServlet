@@ -1,6 +1,5 @@
 package by.tms.web.servlet;
 
-
 import by.tms.storage.InMemoryUserStorage;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,13 +14,19 @@ public class UpdateUserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String newLogin = req.getParameter("login");
-        String newPassword = req.getParameter("password");
-        int userId = (Integer) req.getSession().getAttribute("userId");
-        if(inMemoryUserStorage.updateUserInDB(newLogin, newPassword, userId)) {
-            resp.getWriter().println("rename successful");
+        getServletContext().getRequestDispatcher("/pages/update.jsp").forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (req.getSession().getAttribute("userId") != null) {
+            String newLogin = req.getParameter("login");
+            String newPassword = req.getParameter("password");
+            int userId = (Integer) req.getSession().getAttribute("userId");
+            inMemoryUserStorage.update(newLogin, newPassword, userId);
+            getServletContext().getRequestDispatcher("/pages/update.jsp").forward(req, resp);
         } else {
-            resp.getWriter().println("error");
+            resp.sendRedirect("/");
         }
     }
 }
