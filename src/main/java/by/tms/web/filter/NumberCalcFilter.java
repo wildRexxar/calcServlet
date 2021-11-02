@@ -18,7 +18,7 @@ public class NumberCalcFilter extends HttpFilter {
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
         getServletContext().getRequestDispatcher("/pages/calculator.jsp").forward(req, res);
         listOfNumbers.clear();
-        if (req.getSession().getAttribute("userId") != null) {
+        if (req.getSession().getAttribute("id") != null) {
             String[] nums = req.getParameterValues("num");
             for (String s : nums) {
                 if (s.matches("(-|\\+)?\\d+") && !s.isEmpty()) {
@@ -26,9 +26,9 @@ public class NumberCalcFilter extends HttpFilter {
                 }
             }
             if (listOfNumbers.size() == 2) {
-                req.getSession().setAttribute("listOfNumbers", listOfNumbers);
+                req.setAttribute("listOfNumbers", listOfNumbers);
             } else {
-                req.getSession().setAttribute("listOfNumbers", null);
+                req.setAttribute("listOfNumbers", null);
             }
             chain.doFilter(req, res);
         }

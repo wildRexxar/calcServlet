@@ -16,20 +16,18 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        getServletContext().getRequestDispatcher("/pages/registration.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String login = req.getParameter("login");
-        String password = req.getParameter("password");
-        User user = new User (login, password);
-        if(inMemoryUserStorage.checkLogin(user)){
-            inMemoryUserStorage.save(user);
-            resp.sendRedirect("/home");;
-        }
-        else {
-            resp.sendRedirect("/registration");
+        String login = (String) req.getAttribute("login");
+        String password = (String) req.getAttribute("password");
+        if(login != null && password != null) {
+            User user = new User(login, password);
+            if (inMemoryUserStorage.checkLogin(user)) {
+                inMemoryUserStorage.save(user);
+                resp.sendRedirect("/");
+            }
         }
     }
 }

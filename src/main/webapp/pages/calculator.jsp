@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<c:if test="${sessionScope.userId == null}">
+<c:if test="${sessionScope.id == null}">
     <c:redirect url="/"/>
 </c:if>
 
@@ -30,7 +30,6 @@
     <input type="radio" name="operation" value="DIVIDED">/</p>
     <p><button>Enter</button></p>
 </form>
-
 <p><a href="/userPage"><button>Back</button></a></p>
 
 </body>

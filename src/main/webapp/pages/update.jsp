@@ -12,6 +12,11 @@
     <title>Update</title>
 </head>
 <body>
+
+<c:if test="${sessionScope.id == null}">
+    <c:redirect url="/"/>
+</c:if>
+
 <p>Update</p>
 
 <form action="/update" method="post">

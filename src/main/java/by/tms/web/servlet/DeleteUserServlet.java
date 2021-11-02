@@ -12,13 +12,14 @@ import java.io.IOException;
 @WebServlet("/delete")
 public class DeleteUserServlet extends HttpServlet {
     private final InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
-    private final InMemoryResultStorage inMemoryResultStorage = new InMemoryResultStorage();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if(req.getSession().getAttribute("userId") != null) {
-            int id = (Integer) req.getSession().getAttribute("userId");
+        if(req.getSession().getAttribute("id") != null) {
+            int id = (Integer) req.getSession().getAttribute("id");
             inMemoryUserStorage.delete(id);
             inMemoryUserStorage.delete(id);
+            resp.sendRedirect("/logout");
+        } else {
             resp.sendRedirect("/");
         }
     }

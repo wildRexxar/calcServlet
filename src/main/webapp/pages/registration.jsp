@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<c:if test="${sessionScope.userId != null}">
+<c:if test="${sessionScope.id != null}">
     <c:redirect url="/userPage"/>
 </c:if>
 
@@ -25,6 +25,6 @@
     <p><button>Enter</button></p>
 </form>
 
-<p><a href="/home"><button>Back</button></a></p>
+<p><a href="/"><button>Back</button></a></p>
 </body>
 </html>

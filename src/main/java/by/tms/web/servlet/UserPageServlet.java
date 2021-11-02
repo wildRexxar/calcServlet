@@ -14,5 +14,3 @@ public class UserPageServlet extends HttpServlet {
         getServletContext().getRequestDispatcher("/pages/userPage.jsp").forward(req, resp);
     }
 }
-
-//заменить на jsp

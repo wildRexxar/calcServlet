@@ -16,7 +16,7 @@ public class InMemoryUserStorage {
 
     public boolean checkLogin(User user) {
         String checkLogin = null;
-        try (Connection connection = ConnectToBase.connect();
+        try (Connection connection = DBConnectionManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(findLogin)) {
             preparedStatement.setString(1, user.getLogin());
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -30,7 +30,7 @@ public class InMemoryUserStorage {
     }
 
     public void save(User user) {
-        try (Connection connection = ConnectToBase.connect();
+        try (Connection connection = DBConnectionManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(saveLogin)) {
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
@@ -41,7 +41,7 @@ public class InMemoryUserStorage {
     }
 
     public int idOutput(User user) {
-        try (Connection connection = ConnectToBase.connect();
+        try (Connection connection = DBConnectionManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(getUser)) {
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
@@ -53,22 +53,22 @@ public class InMemoryUserStorage {
         return -1;
     }
 
-    public void delete(int userId) {
-        try (Connection connection = ConnectToBase.connect();
+    public void delete(int id) {
+        try (Connection connection = DBConnectionManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(deleteUser)) {
-            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(1, id);
             preparedStatement.execute();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public boolean update(String newLogin, String newPassword, int userId) {
-        try (Connection connection = ConnectToBase.connect();
+    public boolean update(String newLogin, String newPassword, int id) {
+        try (Connection connection = DBConnectionManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(updateUser)) {
             preparedStatement.setString(1, newLogin);
             preparedStatement.setString(2, newPassword);
-            preparedStatement.setInt(3, userId);
+            preparedStatement.setInt(3, id);
             preparedStatement.execute();
             return true;
         } catch (Exception e) {

@@ -15,6 +15,10 @@
 <body>
 <p>Result History</p>
 
+<c:if test="${sessionScope.id == null}">
+    <c:redirect url="/"/>
+</c:if>
+
 <ul>
     <c:forEach items="${requestScope.results}" var="result">
         <li>${result}</li>

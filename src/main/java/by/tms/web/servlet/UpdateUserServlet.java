@@ -19,12 +19,13 @@ public class UpdateUserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (req.getSession().getAttribute("userId") != null) {
+        if (req.getSession().getAttribute("id") != null) {
             String newLogin = req.getParameter("login");
             String newPassword = req.getParameter("password");
-            int userId = (Integer) req.getSession().getAttribute("userId");
-            inMemoryUserStorage.update(newLogin, newPassword, userId);
-            getServletContext().getRequestDispatcher("/pages/update.jsp").forward(req, resp);
+            int id = (Integer) req.getSession().getAttribute("id");
+            inMemoryUserStorage.update(newLogin, newPassword, id);
+            resp.sendRedirect("/userPage");
+//            getServletContext().getRequestDispatcher("/userPage").forward(req, resp);
         } else {
             resp.sendRedirect("/");
         }

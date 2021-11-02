@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<c:if test="${sessionScope.userId != null}">
+<c:if test="${sessionScope.id != null}">
     <c:redirect url="/userPage"/>
 </c:if>
 

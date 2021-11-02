@@ -1,5 +1,6 @@
 package by.tms.web.servlet;
 
+import by.tms.entity.Result;
 import by.tms.storage.InMemoryResultStorage;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,9 +16,9 @@ public class GetResultServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if(req.getSession().getAttribute("userId") != null) {
-            int userId = (Integer) req.getSession().getAttribute("userId");
-            List<String> results = inMemoryResultStorage.getResult(userId);
+        if(req.getSession().getAttribute("id") != null) {
+            int userId = (Integer) req.getSession().getAttribute("id");
+            List<Result> results = inMemoryResultStorage.getResult(userId);
             req.setAttribute("results", results);
             getServletContext().getRequestDispatcher("/pages/history.jsp").forward(req, resp);
         }
