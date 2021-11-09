@@ -1,5 +1,6 @@
 package by.tms.web.servlet;
 
+import by.tms.entity.User;
 import by.tms.storage.InMemoryUserStorage;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,24 +9,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/update")
-public class UpdateUserServlet extends HttpServlet {
+@WebServlet("/update_user_status")
+public class UpdateUserStatusServlet extends HttpServlet {
+
     private final InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        getServletContext().getRequestDispatcher("/pages/update.jsp").forward(req, resp);
+        getServletContext().getRequestDispatcher("/pages/updateUserStatus.jsp").forward(req, resp);
     }
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (req.getSession().getAttribute("id") != null) {
-            String newLogin = req.getParameter("login");
-            String newPassword = req.getParameter("password");
-            int id = (Integer) req.getSession().getAttribute("id");
-            inMemoryUserStorage.update(newLogin, newPassword, id);
-            resp.sendRedirect("/userPage");
-//            getServletContext().getRequestDispatcher("/userPage").forward(req, resp);
+        User user = (User) req.getSession().getAttribute("user");
+        if (user != null) {
+        String login = req.getParameter("login");
+        String statusStr = req.getParameter("status");
+        boolean status = false;
+        if(statusStr.equals("true")) {
+            status = true;
+        }
+        inMemoryUserStorage.updateUserStatus(login, status );
+            resp.sendRedirect("/users_list");
         } else {
             resp.sendRedirect("/");
         }

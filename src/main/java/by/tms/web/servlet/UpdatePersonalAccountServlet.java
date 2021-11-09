@@ -9,25 +9,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/registration")
-public class RegistrationServlet extends HttpServlet {
-
+@WebServlet("/update")
+public class UpdatePersonalAccountServlet extends HttpServlet {
     private final InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        getServletContext().getRequestDispatcher("/pages/updateAccount.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String login = (String) req.getAttribute("login");
-        String password = (String) req.getAttribute("password");
-        if(login != null && password != null) {
-            User user = new User(login, password);
-            if (inMemoryUserStorage.checkLogin(user) == false) {
-                inMemoryUserStorage.saveUserInDB(user);
-                resp.sendRedirect("/");
-            }
+        if (req.getSession().getAttribute("user") != null) {
+            User user = (User) req.getSession().getAttribute("user");
+            String newLogin = req.getParameter("login");
+            String newPassword = req.getParameter("password");
+            inMemoryUserStorage.updateUserInDB(newLogin, newPassword, user.getId());
+            resp.sendRedirect("/userPage");
+        } else {
+            resp.sendRedirect("/");
         }
     }
 }

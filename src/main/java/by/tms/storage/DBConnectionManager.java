@@ -4,14 +4,15 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DBConnectionManager {
-    private static final String URL = "calc";
-    private static final String user = "ilya";
-    private static final String password = "9708";
+    private static final String BASE = "calc";
+    private static final String USER = "ilya";
+    private static final String PASSWORD = "9708";
+    private static final String URL = "jdbc:mysql://localhost/"+ BASE +"?useUnicode=true&serverTimezone=UTC";
 
     public static Connection connect (){
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost/"+ URL +"?useUnicode=true&serverTimezone=UTC" , user, password);
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (Exception throwables) {
             throwables.printStackTrace();
         }

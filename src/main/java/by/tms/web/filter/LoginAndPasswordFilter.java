@@ -16,7 +16,7 @@ public class LoginAndPasswordFilter extends HttpFilter {
         getServletContext().getRequestDispatcher("/pages/registration.jsp").forward(req, res);
         String login = req.getParameter("login");
         String password = req.getParameter("password");
-        if (!login.matches("\\s*|") && !password.matches("\\s*")){
+        if (!login.matches("\\s*") && !password.matches("\\s*")){
             req.setAttribute("login", login);
             req.setAttribute("password", password);
         }

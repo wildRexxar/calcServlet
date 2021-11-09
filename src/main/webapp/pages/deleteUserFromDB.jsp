@@ -1,26 +1,28 @@
 <%--
   Created by IntelliJ IDEA.
-  User: Илья
-  Date: 27.10.2021
-  Time: 21:21
+  User: Admin
+  Date: 09.11.2021
+  Time: 15:36
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Registration</title>
+    <title>Delete user</title>
 </head>
 <body>
 
-<p>Registration</p>
+<c:if test="${sessionScope.user == null}">
+    <c:redirect url="/"/>
+</c:if>
 
-<form action="/registration" method="post">
+<form action="/delete_user" method="post">
+    <p><b>Enter login</b></p>
     <input type="text" name="login" placeholder="Login">
-    <input type="password" name="password" placeholder="Password">
     <p><button>Enter</button></p>
 </form>
-
-<p><a href="/"><button>Back</button></a></p>
+<p><a href="/users_list"><button>Users list</button></a></p>
+<p><a href="/userPage"><button>Back</button></a></p>
 </body>
 </html>

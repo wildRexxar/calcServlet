@@ -2,7 +2,6 @@ package by.tms.web.servlet;
 
 import by.tms.entity.User;
 import by.tms.storage.InMemoryUserStorage;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,9 +22,9 @@ public class AuthorizationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
-        int id = inMemoryUserStorage.idOutput(new User(login, password));
-        if (id > 0) {
-            req.getSession().setAttribute("id", id);
+        User user = inMemoryUserStorage.getUserFromDB(new User(login, password));
+        if (user != null) {
+            req.getSession().setAttribute("user", user);
             resp.sendRedirect("/userPage");
         } else {
             resp.sendRedirect("/registration");

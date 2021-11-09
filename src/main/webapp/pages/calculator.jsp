@@ -13,24 +13,23 @@
     <title>Calculator</title>
 </head>
 <body>
-
-<c:if test="${sessionScope.id == null}">
+<c:if test="${sessionScope.user == null}">
     <c:redirect url="/"/>
 </c:if>
-
 <form action="/calc" method="post">
     <p><b>Enter number 1</b></p>
     <input type="text" name="num" placeholder="Number 1"><Br>
     <p><b>Enter number 2</b></p>
     <input type="text" name="num" placeholder="Number 2"><Br>
-    <p><b>Сhoose action</b></p>
-    <input type="radio" name="operation" value="PLUS">+<Br>
-    <input type="radio" name="operation" value="MINUS">-<Br>
-    <input type="radio" name="operation" value="MULTIPLE">*<Br>
-    <input type="radio" name="operation" value="DIVIDED">/</p>
+    <p><b>Select action</b></p>
+    <p><select name = "operation">
+        <option value="PLUS">+</option>
+        <option value="MINUS">-</option>
+        <option value="MULTIPLE">*</option>
+        <option value="DIVIDED">/</option>
+    </select></p>
     <p><button>Enter</button></p>
 </form>
 <p><a href="/userPage"><button>Back</button></a></p>
-
 </body>
 </html>

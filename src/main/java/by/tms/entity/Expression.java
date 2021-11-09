@@ -1,12 +1,12 @@
 package by.tms.entity;
 
-public class Result {
+public class Expression {
     private double num1;
     private String operation;
     private double num2;
     private double result;
 
-    public Result(double num1, String operation, double num2, double result) {
+    public Expression(double num1, String operation, double num2, double result) {
         this.num1 = num1;
         this.operation = operation;
         this.num2 = num2;

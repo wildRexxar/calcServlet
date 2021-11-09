@@ -18,7 +18,7 @@ public class NumberCalcFilter extends HttpFilter {
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
         getServletContext().getRequestDispatcher("/pages/calculator.jsp").forward(req, res);
         listOfNumbers.clear();
-        if (req.getSession().getAttribute("id") != null) {
+        if (req.getSession().getAttribute("user") != null) {
             String[] nums = req.getParameterValues("num");
             for (String s : nums) {
                 if (s.matches("(-|\\+)?\\d+") && !s.isEmpty()) {
