@@ -1,7 +1,9 @@
-package by.tms.web.servlet;
+package by.tms.web.servlet.user;
 
+import by.tms.entity.User;
 import by.tms.service.Calc;
 import by.tms.storage.InMemoryResultStorage;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,11 +22,11 @@ public class CalcServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int userIndex = (Integer) req.getSession().getAttribute("id");
-        List<Double> nums = (List<Double>) req.getAttribute("listOfNumbers");
+            User user = (User) req.getSession().getAttribute("user");
+            List<Double> nums = (List<Double>) req.getAttribute("listOfNumbers");
             String operation = req.getParameter("operation");
             double result = Calc.valueOf(operation).compute(nums.get(0), nums.get(1));
-            inMemoryResultStorage.save(userIndex, nums.get(0), operation, nums.get(1), result);
+            inMemoryResultStorage.saveResult(user.getLogin(), nums.get(0), operation, nums.get(1), result);
             req.setAttribute("result", result);
     }
 }

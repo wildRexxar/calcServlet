@@ -13,21 +13,19 @@
 </head>
 <body>
 
-<c:if test="${sessionScope.id == null}">
-    <c:redirect url="/"/>
-</c:if>
-
 <p>Update</p>
 
-<form action="/update" method="post">
+<form action="/updatePersonalAccount" method="post">
     <p><b>Enter new name</b></p>
     <input type="text" name="login" placeholder="New login"><Br>
     <p><b>Enter new password</b></p>
     <input type="text" name="password" placeholder="New password">
-    <p><button>Enter</button></p>
+    <p>
+        <button>Enter</button>
+    </p>
 </form>
-
-<p><a href="/userPage"><button>Back</button></a></p>
-
+<p><a href="/userPage">
+    <button>Back</button>
+</a></p>
 </body>
 </html>

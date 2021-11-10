@@ -1,4 +1,4 @@
-package by.tms.web.servlet;
+package by.tms.web.servlet.user;
 
 import by.tms.entity.User;
 import by.tms.storage.InMemoryUserStorage;
@@ -24,10 +24,14 @@ public class RegistrationServlet extends HttpServlet {
         String password = (String) req.getAttribute("password");
         if(login != null && password != null) {
             User user = new User(login, password);
-            if (inMemoryUserStorage.checkLogin(user)) {
-                inMemoryUserStorage.save(user);
+            if (inMemoryUserStorage.checkLogin(user) == false) {
+                inMemoryUserStorage.saveUserInDB(user);
                 resp.sendRedirect("/");
+            } else {
+                resp.sendRedirect("/authorization");
             }
+        } else {
+            resp.sendRedirect("/");
         }
     }
 }

@@ -6,85 +6,124 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class InMemoryUserStorage {
-    private static final String findLogin = "SELECT * FROM users WHERE BINARY login LIKE ?";
-    private static final String saveLogin = "INSERT INTO users (login, password) VALUE (? , ?)";
-    private static final String getUser = "SELECT * FROM users WHERE BINARY login LIKE ? AND BINARY password LIKE ?";
-    private static final String deleteUser = "DELETE FROM users WHERE id = ?";
-    private static final String updateUser = "UPDATE  users SET login = ?, password = ? where id = ?";
+    private static final String FIND_LOGIN = "SELECT * FROM users WHERE BINARY login LIKE ?";
+    private static final String SAVE_USER = "INSERT INTO users (login, password, status) VALUE (? , ?, false )";
+    private static final String GET_USER = "SELECT * FROM users WHERE BINARY login LIKE ? AND BINARY password LIKE ?";
+    private static final String DELETE_ACCOUNT = "DELETE FROM users WHERE login LIKE ?";
+    private static final String UPDATE_USER = "UPDATE  users SET login = ?, password = ? where id = ?";
+    private static final String GET_USERS = "SELECT * FROM users";
+    private static final String UPDATE_USER_STATUS = "UPDATE users SET status = ? WHERE login LIKE ?";
 
     public boolean checkLogin(User user) {
-        String checkLogin = null;
+        String login = null;
         try (Connection connection = DBConnectionManager.connect();
-             PreparedStatement preparedStatement = connection.prepareStatement(findLogin)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_LOGIN)) {
             preparedStatement.setString(1, user.getLogin());
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                checkLogin = resultSet.getString("login");
+                login = resultSet.getString("login");
+                return login.equals(user.getLogin());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return checkLogin == null;
-    }
-
-    public void save(User user) {
-        try (Connection connection = DBConnectionManager.connect();
-             PreparedStatement preparedStatement = connection.prepareStatement(saveLogin)) {
-            preparedStatement.setString(1, user.getLogin());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public int idOutput(User user) {
-        try (Connection connection = DBConnectionManager.connect();
-             PreparedStatement preparedStatement = connection.prepareStatement(getUser)) {
-            preparedStatement.setString(1, user.getLogin());
-            preparedStatement.setString(2, user.getPassword());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return getId(resultSet, user);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
-
-    public void delete(int id) {
-        try (Connection connection = DBConnectionManager.connect();
-             PreparedStatement preparedStatement = connection.prepareStatement(deleteUser)) {
-            preparedStatement.setInt(1, id);
-            preparedStatement.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean update(String newLogin, String newPassword, int id) {
-        try (Connection connection = DBConnectionManager.connect();
-             PreparedStatement preparedStatement = connection.prepareStatement(updateUser)) {
-            preparedStatement.setString(1, newLogin);
-            preparedStatement.setString(2, newPassword);
-            preparedStatement.setInt(3, id);
-            preparedStatement.execute();
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
     }
 
-    private int getId(ResultSet resultSet, User user) throws SQLException {
-        while (resultSet.next()) {
-            int idInDB = resultSet.getInt("id");
-            String loginInDB = resultSet.getString("login");
-            String passwordInDB = resultSet.getString("password");
-            if (loginInDB.equals(user.getLogin()) && passwordInDB.equals(user.getPassword()))
-                return idInDB;
+    public void saveUserInDB(User user) {
+        try (Connection connection = DBConnectionManager.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(SAVE_USER)) {
+            preparedStatement.setString(1, user.getLogin());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return -1;
+    }
+
+    public User getUserFromDB(User user) {
+        try (Connection connection = DBConnectionManager.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_USER)) {
+            preparedStatement.setString(1, user.getLogin());
+            preparedStatement.setString(2, user.getPassword());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return findUserInDB(resultSet, user);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private User findUserInDB(ResultSet resultSet, User user) throws SQLException {
+        while (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            String login = resultSet.getString("login");
+            String password = resultSet.getString("password");
+            boolean status = resultSet.getBoolean("status");
+            if (login.equals(user.getLogin()) && password.equals(user.getPassword())){
+                return new User(id, login, password, status);
+            }
+        }
+        return null;
+    }
+
+    public List getAllUsersFromDB() {
+        try(Connection connection = DBConnectionManager.connect();
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_USERS)){
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return getListOfUsers(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+       return null;
+    }
+
+    private List getListOfUsers(ResultSet resultSet) throws SQLException{
+        List<User> listOfUsers = new ArrayList<>();
+        while (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            String login = resultSet.getString("login");
+            String password = resultSet.getString("password");
+            boolean status = resultSet.getBoolean("status");
+            listOfUsers.add(new User(id, login, password, status));
+        }
+        return listOfUsers;
+    }
+
+    public void updateUserStatus(String login, boolean status){
+        try (Connection connection = DBConnectionManager.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_STATUS)){
+            preparedStatement.setBoolean(1, status);
+            preparedStatement.setString(2, login);
+            preparedStatement.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteAccount(String login) {
+        try (Connection connection = DBConnectionManager.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ACCOUNT)) {
+            preparedStatement.setString(1, login);
+            preparedStatement.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateUserInDB(String newLogin, String newPassword, int id) {
+        try (Connection connection = DBConnectionManager.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER)) {
+            preparedStatement.setString(1, newLogin);
+            preparedStatement.setString(2, newPassword);
+            preparedStatement.setInt(3, id);
+            preparedStatement.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

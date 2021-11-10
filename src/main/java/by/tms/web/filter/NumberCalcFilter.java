@@ -16,21 +16,25 @@ public class NumberCalcFilter extends HttpFilter {
 
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
-        getServletContext().getRequestDispatcher("/pages/calculator.jsp").forward(req, res);
-        listOfNumbers.clear();
-        if (req.getSession().getAttribute("id") != null) {
-            String[] nums = req.getParameterValues("num");
-            for (String s : nums) {
-                if (s.matches("(-|\\+)?\\d+") && !s.isEmpty()) {
-                    listOfNumbers.add(Double.parseDouble(s));
+        if (req.getSession().getAttribute("user") != null) {
+            getServletContext().getRequestDispatcher("/pages/calculator.jsp").forward(req, res);
+            listOfNumbers.clear();
+            if (req.getSession().getAttribute("user") != null) {
+                String[] nums = req.getParameterValues("num");
+                for (String s : nums) {
+                    if (s.matches("(-|\\+)?\\d+") && !s.isEmpty()) {
+                        listOfNumbers.add(Double.parseDouble(s));
+                    }
                 }
+                if (listOfNumbers.size() == 2) {
+                    req.setAttribute("listOfNumbers", listOfNumbers);
+                } else {
+                    req.setAttribute("listOfNumbers", null);
+                }
+                chain.doFilter(req, res);
             }
-            if (listOfNumbers.size() == 2) {
-                req.setAttribute("listOfNumbers", listOfNumbers);
-            } else {
-                req.setAttribute("listOfNumbers", null);
-            }
-            chain.doFilter(req, res);
+        } else {
+            res.sendRedirect("/");
         }
     }
 }

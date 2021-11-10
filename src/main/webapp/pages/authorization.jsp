@@ -10,12 +10,9 @@
 <html>
 <head>
 <title>Authorization</title>
+    <link href="/pages/styles/style1.css">
 </head>
 <body>
-
-<c:if test="${sessionScope.id != null}">
-    <c:redirect url="/userPage"/>
-</c:if>
 
 <p>Authorization</p>
 
