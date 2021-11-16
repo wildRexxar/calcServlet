@@ -1,0 +1,25 @@
+body {
+    background-image: url("https://7themes.su/_ph/30/275498755.jpg");
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: white;
+}
+
+.navbar-dark .navbar-nav .nav-link.disabled {
+    color: #2699ff;
+}
+
+.margin-search {
+    margin-top: 16px;
+}
+
+.navbar {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.1px;
+    padding-bottom: 0.1px;
+}

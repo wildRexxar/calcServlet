@@ -14,7 +14,7 @@ public class InMemoryUserStorage {
     private static final String SAVE_USER = "INSERT INTO users (login, password, status) VALUE (? , ?, false )";
     private static final String GET_USER = "SELECT * FROM users WHERE BINARY login LIKE ? AND BINARY password LIKE ?";
     private static final String DELETE_ACCOUNT = "DELETE FROM users WHERE login LIKE ?";
-    private static final String UPDATE_USER = "UPDATE  users SET login = ?, password = ? where id = ?";
+    private static final String UPDATE_USER = "UPDATE  users SET login = ?, password = ?";
     private static final String GET_USERS = "SELECT * FROM users";
     private static final String UPDATE_USER_STATUS = "UPDATE users SET status = ? WHERE login LIKE ?";
 
@@ -60,12 +60,11 @@ public class InMemoryUserStorage {
 
     private User findUserInDB(ResultSet resultSet, User user) throws SQLException {
         while (resultSet.next()) {
-            int id = resultSet.getInt("id");
             String login = resultSet.getString("login");
             String password = resultSet.getString("password");
             boolean status = resultSet.getBoolean("status");
             if (login.equals(user.getLogin()) && password.equals(user.getPassword())){
-                return new User(id, login, password, status);
+                return new User(login, password, status);
             }
         }
         return null;
@@ -85,11 +84,10 @@ public class InMemoryUserStorage {
     private List getListOfUsers(ResultSet resultSet) throws SQLException{
         List<User> listOfUsers = new ArrayList<>();
         while (resultSet.next()) {
-            int id = resultSet.getInt("id");
             String login = resultSet.getString("login");
             String password = resultSet.getString("password");
             boolean status = resultSet.getBoolean("status");
-            listOfUsers.add(new User(id, login, password, status));
+            listOfUsers.add(new User(login, password, status));
         }
         return listOfUsers;
     }
@@ -115,12 +113,11 @@ public class InMemoryUserStorage {
         }
     }
 
-    public void updateUserInDB(String newLogin, String newPassword, int id) {
+    public void updateUserInDB(String newLogin, String newPassword) {
         try (Connection connection = DBConnectionManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER)) {
             preparedStatement.setString(1, newLogin);
             preparedStatement.setString(2, newPassword);
-            preparedStatement.setInt(3, id);
             preparedStatement.execute();
         } catch (Exception e) {
             e.printStackTrace();

@@ -3,7 +3,6 @@ package by.tms.entity;
 import java.util.Objects;
 
 public class User {
-    private int id;
     private String login;
     private String password;
     private boolean status;
@@ -13,19 +12,10 @@ public class User {
         this.password = password;
     }
 
-    public User(int id, String login, String password, boolean status){
-        this.id = id;
+    public User(String login, String password, boolean status){
         this.login = login;
         this.password = password;
         this.status = status;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getLogin() {

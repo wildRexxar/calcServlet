@@ -17,7 +17,7 @@ public class AdminServiceServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        getServletContext().getRequestDispatcher("/pages/adminService.jsp").forward(req, resp);
+        getServletContext().getRequestDispatcher("/pages/admin/adminService.jsp").forward(req, resp);
         User user = (User) req.getSession().getAttribute("user");
         if (user != null && user.getStatus()) {
             List<User> listOfUsers = inMemoryUserStorage.getAllUsersFromDB();

@@ -2,6 +2,7 @@ package by.tms.web.servlet.user;
 
 import by.tms.entity.User;
 import by.tms.storage.InMemoryUserStorage;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,22 +17,31 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (req.getSession().getAttribute("user") == null) {
+            getServletContext().getRequestDispatcher("/pages/user/registration.jsp").forward(req, resp);
+        } else {
+            resp.sendRedirect("/");
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String login = (String) req.getAttribute("login");
-        String password = (String) req.getAttribute("password");
-        if(login != null && password != null) {
-            User user = new User(login, password);
-            if (inMemoryUserStorage.checkLogin(user) == false) {
-                inMemoryUserStorage.saveUserInDB(user);
-                resp.sendRedirect("/");
+
+        if (req.getSession().getAttribute("user") == null) {
+            String login = req.getParameter("login");
+            String password = req.getParameter("password");
+            if (!login.matches("\\s*") && !password.matches("\\s*") && login != null && password != null) {
+                User user = new User(login, password);
+                if (inMemoryUserStorage.checkLogin(user) == false) {
+                    inMemoryUserStorage.saveUserInDB(user);
+                    req.setAttribute("message1", "Registration completed successfully");
+                } else {
+                    req.setAttribute("message2", "This user exist");
+                }
             } else {
-                resp.sendRedirect("/authorization");
+                req.setAttribute("message2", "wrong login or password");
             }
-        } else {
-            resp.sendRedirect("/");
+            getServletContext().getRequestDispatcher("/pages/user/registration.jsp").forward(req, resp);
         }
     }
 }

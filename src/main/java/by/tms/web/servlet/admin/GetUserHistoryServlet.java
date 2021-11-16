@@ -21,7 +21,7 @@ public class GetUserHistoryServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = (User) req.getSession().getAttribute("user");
         if(user != null && user.getStatus()) {
-            getServletContext().getRequestDispatcher("/pages/usersResultsHistory.jsp").forward(req, resp);
+            getServletContext().getRequestDispatcher("/pages/admin/usersResultsHistory.jsp").forward(req, resp);
         } else {
             resp.sendRedirect("/");
         }

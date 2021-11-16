@@ -8,11 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = "/registration")
+//@WebFilter(urlPatterns = "/registration")
 public class LoginAndPasswordFilter extends HttpFilter {
 
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
+
         if (req.getSession().getAttribute("user") == null) {
             getServletContext().getRequestDispatcher("/pages/registration.jsp").forward(req, res);
             String login = req.getParameter("login");
@@ -25,7 +26,8 @@ public class LoginAndPasswordFilter extends HttpFilter {
                 req.setAttribute("password", null);
             }
             chain.doFilter(req, res);
-        } else {res.sendRedirect("/userPage");
+        } else {
+            req.setAttribute("message1", "wrong login or password");
         }
     }
 }

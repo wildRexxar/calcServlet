@@ -18,7 +18,6 @@
         <p>
             ${user}
         </p>
-
         <form action="/updateUserStatus" method="post">
             <input type="text" name="login" value="${user.login}">
             <button type="submit" name="status" value="true">set admin</button>

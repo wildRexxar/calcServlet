@@ -12,7 +12,7 @@ public class UserPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if(req.getSession().getAttribute("user") != null) {
-            getServletContext().getRequestDispatcher("/pages/userPage.jsp").forward(req, resp);
+            getServletContext().getRequestDispatcher("/pages/user/userPage.jsp").forward(req, resp);
         } else {
             resp.sendRedirect("/");
         }

@@ -21,7 +21,7 @@ public class GetResultsServlet extends HttpServlet {
             User user = (User) req.getSession().getAttribute("user");
             List<Result> listOfResults = inMemoryResultStorage.getListOfResults(user.getLogin());
             req.setAttribute("listOfResults", listOfResults);
-            getServletContext().getRequestDispatcher("/pages/resultHistory.jsp").forward(req, resp);
+            getServletContext().getRequestDispatcher("/pages/user/resultHistory.jsp").forward(req, resp);
         }
         else {
             resp.sendRedirect("/");

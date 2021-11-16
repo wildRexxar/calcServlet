@@ -16,7 +16,7 @@ public class UpdatePersonalAccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if(req.getSession().getAttribute("user") != null) {
-            getServletContext().getRequestDispatcher("/pages/updatePersonalAccount.jsp").forward(req, resp);
+            getServletContext().getRequestDispatcher("/pages/user/updatePersonalAccount.jsp").forward(req, resp);
         } else {resp.sendRedirect("/");}
     }
 
@@ -25,8 +25,7 @@ public class UpdatePersonalAccountServlet extends HttpServlet {
             User user = (User) req.getSession().getAttribute("user");
             String newLogin = req.getParameter("login");
             String newPassword = req.getParameter("password");
-        System.out.println(user.getId());
-            inMemoryUserStorage.updateUserInDB(newLogin, newPassword, user.getId());
+            inMemoryUserStorage.updateUserInDB(newLogin, newPassword);
             resp.sendRedirect("/logout");
     }
 }

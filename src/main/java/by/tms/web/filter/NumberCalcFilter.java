@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebFilter(urlPatterns = "/calc")
+//@WebFilter(urlPatterns = "/calc")
 public class NumberCalcFilter extends HttpFilter {
     private final List<Double> listOfNumbers = new ArrayList<>();
 
